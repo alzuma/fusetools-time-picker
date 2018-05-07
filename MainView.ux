@@ -1,0 +1,88 @@
+<App>
+	<JavaScript>
+		var Observable = require('FuseJS/Observable');
+
+		var hours = Observable();
+		var minutes = Observable();
+
+		function formatTime(time) {
+			if (time < 10) {
+				return "0" + time;
+			}
+			return time;
+		};
+
+		function Minute(minute) {
+			this.caption = minute;
+			this.type = "minute";
+		};
+
+		function Hour(hour) {
+			this.caption = hour;
+			this.type = "hour";
+		}
+
+		function setupHours() {
+			var hourBucket = [];
+			for (var i = 0; i < 24; i++) {
+				hourBucket.push(new Hour(formatTime(i)));
+			}
+			hours.replaceAll(hourBucket);
+		}
+
+		function setupMinutes() {
+			var minuteBucket = [];
+			for (var i = -5; i < 55; i += 5) {
+				minuteBucket.push(new Minute(formatTime(i + 5)));
+			}
+			minutes.replaceAll(minuteBucket);
+		}
+
+		function activated(args) {
+			//args.data.type == hour or minute
+			//args.data.caption == value selected
+			console.log(JSON.stringify(args));
+		}
+
+		setupHours();
+		setupMinutes();
+
+		module.exports = {
+			hours: hours,
+			minutes: minutes,
+			activated:activated,
+		};
+	</JavaScript>
+
+	<Panel ux:Class="ClockCard" Opacity="0.4" Width="75">
+		<string ux:Property="Caption" />
+		<Scaling ux:Name="pageScaling" Factor="0.95" />
+		<ActivatingAnimation>
+			<Change this.Opacity="1" Duration="0.5" />
+			<Change pageScaling.Factor="1" Duration="0.5" />
+		</ActivatingAnimation>
+		<EnteringAnimation Scale="0.5">
+			<Move Y="-1" RelativeTo="ParentSize" Duration="0.5" />
+		</EnteringAnimation>
+		<ExitingAnimation Scale="0.5">
+			<Move Y="1" RelativeTo="ParentSize" Duration="0.5" />
+		</ExitingAnimation>
+		<Panel Width="95%" Height="60%" Background="#E1FFB9" Alignment="Center">
+			<Text Value="{ReadProperty Caption}" Alignment="Center" />
+		</Panel>
+	</Panel>
+
+	<StackPanel Orientation="Horizontal" Height="60" Width="150">
+		<PageControl ActiveIndex="18" Orientation="Vertical" InactiveState="Unchanged" Transition="None">
+			<Each Items="{hours}">
+				<ClockCard Activated="{activated}" Caption="{caption}" />
+			</Each>
+		</PageControl>
+		<Text Value=":" FontSize="20" Alignment="Center"/>
+		<PageControl ActiveIndex="6" Orientation="Vertical" InactiveState="Unchanged" Transition="None">
+			<Each Items="{minutes}">
+				<ClockCard Activated="{activated}" Caption="{caption}"/>
+			</Each>
+		</PageControl>
+	</StackPanel>
+</App>
