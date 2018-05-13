@@ -73,13 +73,13 @@
 	</Panel>
 
 	<StackPanel Orientation="Horizontal" Height="60" Width="150">
-		<PageControl ActiveIndex="18" Orientation="Vertical" InactiveState="Unchanged" Transition="None">
+		<PageControl IsRouterOutlet="false" ActiveIndex="18" Orientation="Vertical" InactiveState="Unchanged" Transition="None">
 			<Each Items="{hours}">
 				<ClockCard Activated="{activated}" Caption="{caption}" />
 			</Each>
 		</PageControl>
 		<Text Value=":" FontSize="20" Alignment="Center"/>
-		<PageControl ActiveIndex="6" Orientation="Vertical" InactiveState="Unchanged" Transition="None">
+		<PageControl IsRouterOutlet="false" ActiveIndex="6" Orientation="Vertical" InactiveState="Unchanged" Transition="None">
 			<Each Items="{minutes}">
 				<ClockCard Activated="{activated}" Caption="{caption}"/>
 			</Each>
